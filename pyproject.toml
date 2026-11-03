@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "viridian-core"
+version = "0.1.0"
+description = "Shared Viridian core Python modules"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+	"azure-core~=1.41.0",
+	"azure-identity~=1.25.3",
+	"azure-storage-blob~=12.30.0",
+	"azure-storage-queue~=12.17.0",
+    "requests~=2.34.2",
+    "xmltodict~=1.0.4",
+    "pytest~=9.1.1"
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["viridian_core", "viridian_core.*"]
