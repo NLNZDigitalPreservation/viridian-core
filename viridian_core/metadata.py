@@ -30,12 +30,6 @@ class FixityState(enum.Enum):
     NOTMATCHED = 2
 
 
-class FixityLabel(enum.Enum):
-    CHECKSUM_NOT_MATCH = 1
-    FILE_SIZE_NOT_MATCH = 2
-    MALFORMED_URL_NAME = 3
-
-
 class FinalResultCode:
     FIXITY_INITIALED = 100
     FIXITY_RUNNING = 101
@@ -54,6 +48,7 @@ class FinalResultCode:
     BLOB_DUPLICATED_IN_DB = 11
     BLOB_DUPLICATED_IN_EVENTS = 12
     BLOB_MALFORMED_NAME = 13
+    BOTH_FILE_SIZE_AND_CHECKSUM_NOT_MATCH = 14
 
 
 FinalResultOptions = {
@@ -74,6 +69,7 @@ FinalResultOptions = {
     FinalResultCode.BLOB_DUPLICATED_IN_DB: "Blob name duplicated in the database",
     FinalResultCode.BLOB_DUPLICATED_IN_EVENTS: "Blob name duplicated in the events",
     FinalResultCode.BLOB_MALFORMED_NAME: "Blob name is malformed",
+    FinalResultCode.BOTH_FILE_SIZE_AND_CHECKSUM_NOT_MATCH: "Both file size and checksum do not match",
 }
 
 FinalResultErrorFlag = {
@@ -129,6 +125,7 @@ FinalResultGroup = [
             _get_select_option(FinalResultCode.BLOB_DUPLICATED_IN_DB),
             _get_select_option(FinalResultCode.BLOB_DUPLICATED_IN_EVENTS),
             _get_select_option(FinalResultCode.BLOB_MALFORMED_NAME),
+            _get_select_option(FinalResultCode.BOTH_FILE_SIZE_AND_CHECKSUM_NOT_MATCH),
         ],
     },
 ]
