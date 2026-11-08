@@ -38,6 +38,19 @@ class EntityInfo:
 ENTITY_INFO_PATTERN = re.compile(r"^V(\d+)[-_](FL|IE|SIP|MD)([^.]+)$")
 
 
+def is_valid_entity_type(blob_name: str) -> bool:
+    if not blob_name:
+        return None, False
+
+    file_name = blob_name.split("/")[-1]
+    file_name = file_name.split(".", 1)[0]
+    match = ENTITY_INFO_PATTERN.match(file_name)
+    if not match:
+        return None, False
+    storage_entity_type = match.group(2)
+    return storage_entity_type, storage_entity_type in STORAGE_ENTITY_TYPE_MAP.keys()
+
+
 def guess_entity_info(blob_name: str) -> Optional[EntityInfo]:
     if not blob_name:
         return None
