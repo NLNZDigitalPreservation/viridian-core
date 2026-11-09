@@ -111,10 +111,11 @@ def extract_fixity_value_from_amd_sec(
 # 3. Extract the key sections, it should be an array contains lots of items
 # 4. Convert the key array to a dict, then we can extract the fixity value from the dict
 def _parse_mets_xml(xml_data):
-    coll_mets_file = []
+    coll_mets_file = {}
     data_dict = xmltodict.parse(xml_data)
     parser = MetsXmlParser()
     mets_amd_sec = parser.parse_dict_by_key(data_dict, "mets:amdSec")
+
     # print(mets_amd_sec)
     for amd in mets_amd_sec:
         records = parser.parse_dict_by_key(amd, "record")
@@ -131,9 +132,27 @@ def _parse_mets_xml(xml_data):
             amd_id=amd_id, checksum_type=DEFAULT_CHECKSUM_TYPE, checksum=fixity_value
         )
 
-        coll_mets_file.append(amd_info.to_dict())
+        coll_mets_file[amd_id] = amd_info
 
-    return coll_mets_file
+    # Append blob name
+    mets_file_sec = parser.parse_dict_by_key(data_dict, "mets:file")
+    for amd in mets_file_sec:
+        amd_id = amd.get("@ID", None)
+        mets_flocat = amd.get("mets:FLocat", None)
+        if amd_id is None or mets_flocat is None:
+            continue
+        if amd_id not in coll_mets_file:
+            continue
+
+        xlin_href = mets_flocat.get("@xlin:href", None)
+        if xlin_href is None:
+            continue
+        blob_name = xlin_href.lstrip("/")
+        coll_mets_file[amd_id].blob_name = blob_name
+
+    ret = [coll_mets_file[amd_id].to_dict() for amd_id in coll_mets_file]
+
+    return ret
 
 
 def parse_mets_xml(entity: EntityInfo):

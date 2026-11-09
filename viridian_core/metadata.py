@@ -236,6 +236,7 @@ class AmdInfo:
     amd_id: str
     checksum_type: str
     checksum: str
+    blob_name: str = ""
 
     def to_dict(self):
         return asdict(self)
