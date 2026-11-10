@@ -2,9 +2,30 @@ import pytest
 from viridian_core.utils import blob_storage
 from viridian_core.utils.blob_storage import (
     build_queue_client,
+    extract_blob_name,
     parse_blob_url,
     parse_queue_url,
 )
+
+
+def test_extract_blob_name_production():
+    blob_name = "path/to/file.txt"
+    url = f"https://account.blob.core.windows.net/container/{blob_name}"
+    extracted_name = blob_storage.extract_blob_name(url)
+    assert extracted_name == blob_name
+
+
+def test_extract_blob_name_production_with_leading_slash():
+    blob_name = "/path/to/file.txt"
+    url = f"https://account.blob.core.windows.net/container/{blob_name}"
+    extracted_name = blob_storage.extract_blob_name(url)
+    assert extracted_name == blob_name
+
+
+def test_extract_blob_name_azurite():
+    url = "http://127.0.0.1:10000/devstoreaccount1/container/path/to/file.txt"
+    extracted_name = blob_storage.extract_blob_name(url)
+    assert extracted_name == "path/to/file.txt"
 
 
 def test_parse_blob_url_production():

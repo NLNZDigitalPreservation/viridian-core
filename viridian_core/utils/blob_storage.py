@@ -228,6 +228,22 @@ def guess_index_location(blob_name: str):
     return blob_name
 
 
+def extract_blob_name(blob_url: str) -> Optional[str]:
+    try:
+        blob = BlobClient.from_blob_url(blob_url)
+    except Exception as e:
+        raise ValueError(f"Invalid blob URL: {blob_url}") from e
+
+    account_url = f"{blob.scheme}://{blob.primary_hostname}"
+    prefix_len = len(account_url) + len(blob.container_name) + 2  # +2 for the slashes
+    if len(blob_url) > prefix_len:
+        blob_name = blob_url[prefix_len:]
+    else:
+        blob_name = None
+
+    return blob_name
+
+
 def parse_blob_url(blob_url: str) -> BlobAccessArguments:
     try:
         blob = BlobClient.from_blob_url(blob_url)
